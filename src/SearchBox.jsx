@@ -4,7 +4,7 @@ import { useCombobox } from 'downshift';
 const Searchbox = () => {
   const [inputItems, setInputItems] = useState([]);
   const [users, setUsers] = useState([]);
-  const [singleUser, setSingleUser] = useState([]);
+  const [singleUser, setSingleUser] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -27,7 +27,7 @@ const Searchbox = () => {
     isOpen,
     getMenuProps,
     getInputProps,
-    getComboProps,
+    getComboboxProps,
     highlightedIndex,
     getItemProps,
   } = useCombobox({
@@ -43,10 +43,23 @@ const Searchbox = () => {
 
   return (
     <>
-      <ul>
-        {users.map(user => {
-          return <li key={user.id}>{user.name}</li>;
-        })}
+      <h2>Current user: {singleUser}</h2>
+      <div {...getComboboxProps}>
+        <input {...getInputProps()} placeholder='Search' />
+      </div>
+      <ul {...getMenuProps()}>
+        {isOpen &&
+          inputItems.map(item => (
+            <span
+              key={item.id}
+              {...getItemProps(item)}
+              onClick={() => setSingleUser(item.name)}
+            >
+              <li>
+                <h4>{item.name}</h4>
+              </li>
+            </span>
+          ))}
       </ul>
     </>
   );
